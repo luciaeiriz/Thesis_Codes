@@ -3,7 +3,7 @@ import os
 from astropy.table import Table
 from astropy.io.votable import parse, from_table, writeto
 
-# Chi Squared Index Prueba
+# Chi Squared Index o
 
 # Paths
 data_folder = 'Clean_Data'
