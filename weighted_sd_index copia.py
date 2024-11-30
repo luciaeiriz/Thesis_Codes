@@ -6,7 +6,7 @@ from astropy.io.votable import parse, from_table, writeto
 # Weighted Standard Deviation
 
 # Paths
-data_folder = 'Clean_Data'
+data_folder = 'Filtered_Data'
 output_folder = 'Weighted_SD_Indices'
 
 # List all files 
@@ -14,7 +14,7 @@ files = os.listdir(data_folder)
 
 # Iterate over each file 
 for target_file in files:
-    if target_file.endswith('_all_xcalibrated_clean.vot'):  # Check for specific file 
+    if target_file.endswith('_filtered.vot'):  # Check for specific file 
         file_path = os.path.join(data_folder, target_file)
 
         votable = parse(file_path)
@@ -26,9 +26,9 @@ for target_file in files:
 
         # Identify columns that contain '_mag_' and '_mager_' in header
         for col in table.colnames:
-            if '_mag_' in col:
+            if 'mag_' in col:
                 magnitude.append(table[col].data)
-            elif '_mager_' in col:
+            elif 'mager_' in col:
                 magnitude_err.append(table[col].data)
 
         # Convert lists to numpy arrays, replacing empty values with NaN
@@ -44,30 +44,37 @@ for target_file in files:
 
         # Weighted mean magnitude calculation
         weighted_mag = np.zeros(mag_matrix.shape[0])
+        mean_magnitude = np.full(mag_matrix.shape[0], np.nan)
         for i in range(mag_matrix.shape[0]):
             # Extract valid magnitudes and errors (remove NaN)
             valid_mags = mag_matrix[i, ~np.isnan(mag_matrix[i]) & ~np.isnan(mager_matrix[i])]
             valid_mager = mager_matrix[i, ~np.isnan(mag_matrix[i]) & ~np.isnan(mager_matrix[i])]
 
             if len(valid_mags) > 0:  # Perform m bar calculation
+
                 # Summation components
                 numerator = np.sum(valid_mags / valid_mager ** 2)
                 denominator = np.sum(1 / (valid_mager ** 2))
 
                 # Weighted average
                 weighted_mag[i] = numerator / denominator
+                mean_magnitude[i] = np.nanmean(valid_mags)
             else:
                 # If no valid data, store NaN
                 weighted_mag[i] = np.nan
+                mean_magnitude[i] = np.nan
 
         # Weighted Standard Deviation
         weighted_sd = np.zeros(mag_matrix.shape[0])
+        mean_magnitude = np.full(mag_matrix.shape[0], np.nan)
         for i in range(mag_matrix.shape[0]):
             # Extract valid magnitudes and errors (remove NaN)
             valid_mags = mag_matrix[i, ~np.isnan(mag_matrix[i]) & ~np.isnan(mager_matrix[i])]
             valid_mager = mager_matrix[i, ~np.isnan(mag_matrix[i]) & ~np.isnan(mager_matrix[i])]
 
             if len(valid_mags) > 0:  # Perform calculation only if there are valid values
+                mean_magnitude[i] = np.nanmean(valid_mags)
+
                 w_i = 1 / valid_mager ** 2
                 a = np.sum(w_i) 
                 b = (np.sum(w_i)) ** 2 
@@ -78,18 +85,19 @@ for target_file in files:
 
             else:
                 # If no valid data, store NaN
+                mean_magnitude[i] = np.nan
                 weighted_sd[i] = np.nan
 
         # Saving data in new table
         ra_column = table['RA'].data
         dec_column = table['DEC'].data
 
-        new_table = Table(data=[ra_column, dec_column, N, weighted_sd], names=('RA', 'DEC', 'N', 'weighted_standard_deviation'))
+        new_table = Table(data=[ra_column, dec_column, N, weighted_sd, mean_magnitude], names=('RA', 'DEC', 'N', 'weighted_standard_deviation', 'mean_magnitude'))
         new_votable = from_table(new_table)
 
         # Generate the output file name by removing '_all_xcalibrated_clean.vot' from the original name
-        base_name = target_file.replace('_all_xcalibrated_clean.vot', '')
-        output_file_path = os.path.join(output_folder, f"{base_name}_weightedsd_index.vot")
+        base_name = target_file.replace('_filtered.vot', '')
+        output_file_path = os.path.join(output_folder, f"{base_name}_weightedsd.vot")
 
         # Save the new VOTable to the specified folder
         writeto(new_votable, output_file_path)
