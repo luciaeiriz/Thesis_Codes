@@ -3,6 +3,8 @@ from astropy.table import Table
 import numpy as np
 import os
 
+# Welch-Stetson index
+
 def calculate_welch_stetson(b, v, sigma_b, sigma_v):
     mask = ~np.isnan(b) & ~np.isnan(v) & ~np.isnan(sigma_b) & ~np.isnan(sigma_v) & (sigma_b > 0) & (sigma_v > 0)
     b, v, sigma_b, sigma_v = b[mask], v[mask], sigma_b[mask], sigma_v[mask]
@@ -84,4 +86,4 @@ for filename in os.listdir(input_folder):
             writeto(new_votable, output_file_path)
             print(f"New VOTable saved as {output_file_path}")
         except Exception as e:
-            print(f"Error writing VOTable {filename}: {e}")
+            print(f"Error writing VOTable {filename}: {e}") 

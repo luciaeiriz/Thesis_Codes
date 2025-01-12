@@ -14,7 +14,7 @@ files = os.listdir(data_folder)
 
 # Iterate over each file 
 for target_file in files:
-    if target_file.endswith('_filtered.vot'):  # Check for specific file 
+    if target_file.endswith('.vot'):  # Check for specific file 
         file_path = os.path.join(data_folder, target_file)
 
         votable = parse(file_path)
@@ -45,20 +45,26 @@ for target_file in files:
         # Initialize an array to store the index for each object
         vn_index = np.zeros(mag_matrix.shape[0])
         mean_magnitude = np.full(mag_matrix.shape[0], np.nan)
-
+        weighted_mag = np.zeros(mag_matrix.shape[0])
         for i in range(mag_matrix.shape[0]):
         # Extract valid magnitudes (remove NaN)
-            valid_mags = mag_matrix[i, ~np.isnan(mag_matrix[i])]
+            valid_mask = ~np.isnan(mag_matrix[i]) & ~np.isnan(mager_matrix[i])
+            valid_mags = mag_matrix[i, valid_mask]
+            valid_mager = mager_matrix[i, valid_mask]
 
             if len(valid_mags) > 1:  # Perform calculation only if there are at least 2 values
                 # Calculate mean magnitude
                 mean_magnitude[i] = np.nanmean(valid_mags)
                 n = len(valid_mags)
 
+                numerator_weighted = np.sum(valid_mags / valid_mager ** 2)
+                denominator_weighted = np.sum(1 / (valid_mager ** 2))
+                weighted_mag[i] = numerator_weighted / denominator_weighted
+
                 #(m_{i+1} - m_i)^2 / (N-1)
                 numerator = np.sum((valid_mags[1:] - valid_mags[:-1])**2) / (n-1)
-                #sum of (m_i - mean)^2 / (N-1)
-                denominator = np.sum((valid_mags - mean_magnitude[i]) ** 2) / (n-1)
+                #sum of (m_i - m_bar)^2 / (N-1)
+                denominator = np.sum((valid_mags - weighted_mag[i]) ** 2) / (n-1)
 
                 # Calculate l1 index, checking if the denominator is non-zero
                 vn_index[i] = 1 / (numerator / denominator if denominator != 0 else np.nan)
@@ -76,7 +82,7 @@ for target_file in files:
         new_votable = from_table(new_table)
 
         # Generate the output file name by removing '_filtered.vot' from the original name
-        base_name = target_file.replace('_filtered.vot', '')
+        base_name = target_file.replace('.vot', '')
         output_file_path = os.path.join(output_folder, f"{base_name}_vn.vot")
 
         # Save the new VOTable to the specified folder
