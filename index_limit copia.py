@@ -1,9 +1,13 @@
 from astropy.table import Table
 import os
 
-input_folder = 'Stetson_J_Indices'
-input_file = 'g_i_sJ.vot'
-output_file = 'variable_g_i_sJ.vot'
+filter = 'r_z'
+index = 'ws'
+
+input_folder = 'Welch_Stetson_Indices'
+input_file = filter+'_'+index+'.vot'
+
+output_file = 'filtered_'+ input_file
 output_folder = 'Variable_objects'
 
 input_path = os.path.join(input_folder, input_file)
@@ -17,8 +21,8 @@ except Exception as e:
     exit()
 
 # Filter data
-#filtered_table = table[table.columns[3] >= 1.3]
-filtered_table = table[(table.columns[3] < - 0.8) | (table.columns[3] > 0.8)]
+#filtered_table = table[table.columns[3] >= 0.1] # above given limit 
+filtered_table = table[(table.columns[3] < - 0.5) | (table.columns[3] > 0.8)] # below and above given limit
 
 # Save the filtered table to a new VOTable
 try:
