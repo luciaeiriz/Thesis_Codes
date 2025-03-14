@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 df = pd.read_csv("count_object_type.csv")
 
+# Stellar taxonomy (same as csv file headers) + total number of objects
 object_totals = {
     "YSOs": 2918,
     "MS stars": 9,
@@ -30,8 +31,7 @@ ax = sns.heatmap(
     cbar_kws={"label": "Ratio detected"}
 )
 
-# Modify y-tick labels to include total counts
-new_labels = [f"{label} ({object_totals[label]})" for label in heatmap_data.index]
+new_labels = [f"{label} ({object_totals[label]})" for label in heatmap_data.index] # Include total number of objects in y ticks
 ax.set_yticklabels(new_labels, rotation=0)
 
 plt.title("Fraction of Each Object Type Flagged by Each Variability Index", fontweight="bold", size=12)

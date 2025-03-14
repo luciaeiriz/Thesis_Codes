@@ -3,100 +3,42 @@ import os
 from astropy.table import Table
 from astropy.io.votable import parse, from_table, writeto
 
-# ## Filtering by mean magnitude
-# # Paths
-# data_folder = 'Data_per_night'
-# output_folder = 'Filtered_Data'
+data_folder = 'Data_per_night'
+output_folder = 'Filtered_Data'
 
-# # Create output folder if it doesn't exist
-# if not os.path.exists(output_folder):
-#     os.makedirs(output_folder)
-
-# # List all files 
-# files = os.listdir(data_folder)
-
-# # Iterate over each file 
-# for target_file in files:
-#     if 'uJAVA' in target_file and target_file.endswith('.vot'):  # Check for 'x' in filename and .vot extension
-#         file_path = os.path.join(data_folder, target_file)
-
-#         votable = parse(file_path)
-#         table = votable.get_first_table().to_table()
-
-#         # Identify columns that contain 'mag' in header
-#         mag_columns = [col for col in table.colnames if 'mag_' in col.lower()]
-
-#         if mag_columns:
-#             # Extract magnitude data
-#             mag_matrix = np.array([table[col].data for col in mag_columns], dtype='float').T
-
-#             # Replace masked/empty values with NaN
-#             mag_matrix = np.where(np.ma.is_masked(mag_matrix), np.nan, mag_matrix)
-
-#             # Calculate mean magnitude for each row, considering only valid (non-NaN) values
-#             mean_magnitude = np.full(mag_matrix.shape[0], np.nan)
-#             for i in range(mag_matrix.shape[0]):
-#                 valid_mags = mag_matrix[i][~np.isnan(mag_matrix[i])]
-#                 if len(valid_mags) > 0:
-#                     mean_magnitude[i] = np.mean(valid_mags)
-
-#             # Filter rows where mean magnitude is x or above
-#             mask = mean_magnitude >= 14.3
-#             filtered_table = table[mask]
-
-#             # Create a new VOTable from the filtered data
-#             new_votable = from_table(filtered_table)
-
-#             # Write the filtered data to a new file in the output folder
-#             base_name = target_file.replace('.vot', '')
-#             output_file = os.path.join(output_folder, f"{base_name}_filtered.vot")
-#             writeto(new_votable, output_file)
-
-#             print(f"Processed and filtered: {target_file}")
-#             print(f"Original rows: {len(table)}, Filtered rows: {len(filtered_table)}")
-#         else:
-#             print(f"No 'mag_' columns found in {target_file}")
-
-# print("Processing complete.")
-
-## Filter by number of nights
-# Paths
-import os
-import numpy as np
-from astropy.io.votable import parse, writeto
-from astropy.table import Table
-
-data_folder = 'Stetson_Indices'
-output_folder = 'Stetson_Indices'
-
-# Create output folder if it doesn't exist
-if not os.path.exists(output_folder):
+if not os.path.exists(output_folder): # Create output folder if it doesn't exist
     os.makedirs(output_folder)
 
-# List all files 
 files = os.listdir(data_folder)
 
-# Iterate over each file 
+
 for target_file in files:
-    if '_' in target_file and target_file.endswith('.vot'):  # Check for 'uJAVA' in filename and .vot extension
+    if 'uJAVA' in target_file and target_file.endswith('.vot'):  # Check for 'filter' in filename and .vot extension
         file_path = os.path.join(data_folder, target_file)
 
-        # Parse the VOTable file
         votable = parse(file_path)
         table = votable.get_first_table().to_table()
 
-        # Access the third column directly by index
-        third_column = table.columns[2]  # Third column (index 2)
+        # Identify columns that contain 'mag' in header
+        mag_columns = [col for col in table.colnames if 'mag_' in col.lower()]
 
-        # Check if the column data is numeric (for comparison)
-        if np.issubdtype(third_column.dtype, np.number):
-            # Create a mask for rows where the third column value is >= 10
-            mask = third_column.data >= 25
+        if mag_columns:
+            # Extract magnitude data
+            mag_matrix = np.array([table[col].data for col in mag_columns], dtype='float').T
 
-            # Filter the table using the mask
+            # Replace empty values with NaN
+            mag_matrix = np.where(np.ma.is_masked(mag_matrix), np.nan, mag_matrix)
+
+            # Calculate mean magnitude for each row, considering only valid values
+            mean_magnitude = np.full(mag_matrix.shape[0], np.nan)
+            for i in range(mag_matrix.shape[0]):
+                valid_mags = mag_matrix[i][~np.isnan(mag_matrix[i])]
+                if len(valid_mags) > 0:
+                    mean_magnitude[i] = np.mean(valid_mags)
+
+            mask = mean_magnitude >= 14.3 # Mean magnitude threshold
             filtered_table = table[mask]
 
-            # Create a new VOTable from the filtered data
             new_votable = from_table(filtered_table)
 
             # Write the filtered data to a new file in the output folder
@@ -107,23 +49,6 @@ for target_file in files:
             print(f"Processed and filtered: {target_file}")
             print(f"Original rows: {len(table)}, Filtered rows: {len(filtered_table)}")
         else:
-            print(f"Third column is not numeric in {target_file}")
+            print(f"No 'mag_' columns found in {target_file}")
 
 print("Processing complete.")
-
-
-
-# ## Filtering by g Flux
-# from astropy.table import Table
-
-# # Read the VOTable
-# table = Table.read('simbad_variables.vot', format='votable')
-
-# # Filter out rows where gmeanmag > 19.5
-# filtered_table = table[table['FLUX_G'] <= 19.5]
-
-# # Write the filtered table back to a new VOTable file
-# filtered_table.write('filtered_simbad_variables.vot', format='votable', overwrite=True)
-
-
-

@@ -5,10 +5,12 @@ from astropy.io.votable import parse
 def extract_fourth_column(file_path):
     votable = parse(file_path)
     table = votable.get_first_table().to_table()
-    return table.columns[3]  # Fourth column (index 3)
+    return table.columns[3]  # Fourth column (index)
 
-x = "_sa04"
+# Index name
+x = "_sa04" # Change when necessary
 
+# 6 files 
 simbad_files = [
     "Simbad_variable_objects/variables_gSDSS"+x+".vot",
     "Simbad_variable_objects/variables_iSDSS"+x+".vot",
@@ -27,6 +29,7 @@ gaia_files = [
     "Gaia_nonvariable_objects/nonvariables_uJAVA"+x+".vot",
 ]
 
+# # 10 files
 # simbad_files = [
 #     "Simbad_variable_objects/variables_g_i"+x+".vot",
 #     "Simbad_variable_objects/variables_g_J"+x+".vot",
@@ -52,7 +55,6 @@ gaia_files = [
 #     "Gaia_nonvariable_objects/nonvariables_J_z"+x+".vot",
 #     "Gaia_nonvariable_objects/nonvariables_r_z"+x+".vot",
 # ]
-
 
 data_x1 = extract_fourth_column(simbad_files[0])
 data_y1 = extract_fourth_column(gaia_files[0])
@@ -202,7 +204,6 @@ axes[1, 2].legend()
 # axes[1, 4].set_xlim(-1, 5)
 # # axes[1, 2].set_ylim(0, 20)
 # axes[1, 4].legend()
-
 
 # Adjust layout
 plt.tight_layout(rect=[0, 0, 1, 0.96])
