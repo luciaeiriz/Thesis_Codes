@@ -28,10 +28,10 @@ fig, ax = plt.subplots(figsize=(12, 7))
 # Define a colormap based on "viridis"
 colors = sns.color_palette("viridis", n_colors=len(bar_data.columns))
 
-# ---- Option 1: Stacked Bar Chart ----
+# Option 1: Stacked Bar Chart
 # bar_data.plot(kind="bar", stacked=True, color=colors, edgecolor="black", alpha=0.85, ax=ax)
 
-# ---- Option 2: Grouped Bar Chart ----
+# Option 2: Grouped Bar Chart
 bar_data.plot(kind="bar", stacked=False, color=colors, edgecolor="black", alpha=0.85, width=0.8, position=1, ax=ax)
 
 # Modify legend labels to include total counts
