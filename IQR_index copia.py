@@ -24,7 +24,6 @@ for target_file in files:
         magnitude = []
         magnitude_err = []
 
-        # Identify columns that contain '_mag_' and '_mager_' in header
         for col in table.colnames:
             if 'mag_' in col:
                 magnitude.append(table[col].data)

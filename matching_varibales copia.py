@@ -3,7 +3,7 @@ import os
 from astropy.table import Table
 
 # Folder containing the VOTables
-folder = "Variable_objects/Stetson_K_Variables" #change
+folder = "Variable_objects/SA04_Variables" #change when necessary
 
 # List to store tables
 tables = []
@@ -42,7 +42,8 @@ for table in tables:
 
 
 # Create a new VOTable and save it
-output_path = os.path.join(folder, "matched_stars.vot")
+index = "sa04" #change when necessary
+output_path = os.path.join(folder, "variables_"+index+".vot")
 new_votable = from_table(matched_table)
 writeto(new_votable, output_path)
 print(f"New VOTable 'matched_stars.vot' created successfully in {folder}")

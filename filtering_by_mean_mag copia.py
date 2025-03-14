@@ -3,6 +3,7 @@ import os
 from astropy.table import Table
 from astropy.io.votable import parse, from_table, writeto
 
+# ## Filtering by mean magnitude
 # # Paths
 # data_folder = 'Data_per_night'
 # output_folder = 'Filtered_Data'
@@ -16,7 +17,7 @@ from astropy.io.votable import parse, from_table, writeto
 
 # # Iterate over each file 
 # for target_file in files:
-#     if 'uJAVA' in target_file and target_file.endswith('.vot'):  # Check for 'gSDSS' in filename and .vot extension
+#     if 'uJAVA' in target_file and target_file.endswith('.vot'):  # Check for 'x' in filename and .vot extension
 #         file_path = os.path.join(data_folder, target_file)
 
 #         votable = parse(file_path)
@@ -40,14 +41,14 @@ from astropy.io.votable import parse, from_table, writeto
 #                     mean_magnitude[i] = np.mean(valid_mags)
 
 #             # Filter rows where mean magnitude is x or above
-#             mask = mean_magnitude >= 14.4
+#             mask = mean_magnitude >= 14.3
 #             filtered_table = table[mask]
 
 #             # Create a new VOTable from the filtered data
 #             new_votable = from_table(filtered_table)
 
 #             # Write the filtered data to a new file in the output folder
-#             base_name = target_file.replace('_all_xcalibrated_clean_processed.vot', '')
+#             base_name = target_file.replace('.vot', '')
 #             output_file = os.path.join(output_folder, f"{base_name}_filtered.vot")
 #             writeto(new_votable, output_file)
 
@@ -58,16 +59,71 @@ from astropy.io.votable import parse, from_table, writeto
 
 # print("Processing complete.")
 
+## Filter by number of nights
+# Paths
+import os
+import numpy as np
+from astropy.io.votable import parse, writeto
 from astropy.table import Table
 
-# Read the VOTable
-table = Table.read('simbad_variables.vot', format='votable')
+data_folder = 'Stetson_Indices'
+output_folder = 'Stetson_Indices'
 
-# Filter out rows where gmeanmag > 19.5
-filtered_table = table[table['FLUX_G'] <= 19.5]
+# Create output folder if it doesn't exist
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
 
-# Write the filtered table back to a new VOTable file
-filtered_table.write('filtered_simbad_variables.vot', format='votable', overwrite=True)
+# List all files 
+files = os.listdir(data_folder)
+
+# Iterate over each file 
+for target_file in files:
+    if '_' in target_file and target_file.endswith('.vot'):  # Check for 'uJAVA' in filename and .vot extension
+        file_path = os.path.join(data_folder, target_file)
+
+        # Parse the VOTable file
+        votable = parse(file_path)
+        table = votable.get_first_table().to_table()
+
+        # Access the third column directly by index
+        third_column = table.columns[2]  # Third column (index 2)
+
+        # Check if the column data is numeric (for comparison)
+        if np.issubdtype(third_column.dtype, np.number):
+            # Create a mask for rows where the third column value is >= 10
+            mask = third_column.data >= 25
+
+            # Filter the table using the mask
+            filtered_table = table[mask]
+
+            # Create a new VOTable from the filtered data
+            new_votable = from_table(filtered_table)
+
+            # Write the filtered data to a new file in the output folder
+            base_name = target_file.replace('.vot', '')
+            output_file = os.path.join(output_folder, f"{base_name}_filtered.vot")
+            writeto(new_votable, output_file)
+
+            print(f"Processed and filtered: {target_file}")
+            print(f"Original rows: {len(table)}, Filtered rows: {len(filtered_table)}")
+        else:
+            print(f"Third column is not numeric in {target_file}")
+
+print("Processing complete.")
+
+
+
+# ## Filtering by g Flux
+# from astropy.table import Table
+
+# # Read the VOTable
+# table = Table.read('simbad_variables.vot', format='votable')
+
+# # Filter out rows where gmeanmag > 19.5
+# filtered_table = table[table['FLUX_G'] <= 19.5]
+
+# # Write the filtered table back to a new VOTable file
+# filtered_table.write('filtered_simbad_variables.vot', format='votable', overwrite=True)
 
 
 

@@ -63,8 +63,8 @@ for target_file in files:
 
                 # Calculate chi-squared
                 chi_squared[i] = np.sum(((valid_mags - weighted_mag[i]) ** 2) / (valid_mager ** 2))
-                # Normalize by the number of valid points (N)
-                chi_squared[i] /= N[i] if N[i] > 0 else 1  # Avoid division by zero
+                # Normalize by the number of valid points (N-1)
+                chi_squared[i] /= N[i] - 1 if N[i] > 0 else 1  # Avoid division by zero
             else:
                 # If no valid data, store NaN
                 mean_magnitude[i] = np.nan

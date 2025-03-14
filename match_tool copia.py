@@ -8,14 +8,14 @@ from astropy.table import Table
 max_error = 1.2 * u.arcsec
 
 #Load VOTable. Change depnding on what is being processed!
-gaia_votable = parse('Gaia_nonvariables.vot')
+gaia_votable = parse('Simbad_variables.vot')
 gaia_table = gaia_votable.get_first_table().to_table()
 
 #Extract ra and dec from table being processed. Change name depending on table (Simbad/ Gaia)
-gaia_coords = SkyCoord(ra=gaia_table['ra'], dec=gaia_table['dec'], unit=(u.degree, u.degree), frame='icrs')
+gaia_coords = SkyCoord(ra=gaia_table['RA_d'], dec=gaia_table['DEC_d'], unit=(u.degree, u.degree), frame='icrs')
 
 #Output folder
-output_folder = 'Gaia_nonvariable_objects'
+output_folder = 'Simbad_variable_objects'
 os.makedirs(output_folder, exist_ok=True)
 current_directory = os.getcwd()
 
@@ -56,10 +56,11 @@ for item in os.listdir(current_directory):
                 result_table['separation'] = d2d.to(u.arcsec)
 
                 # Save the matched data as a new VOTable
-                output_filename = f"nonvariables_{filename}" #adds prefix to saved tables. Change depending on data being matched
+                output_filename = f"variables_{filename}"
                 output_filepath = os.path.join(output_folder, output_filename)
                 
                 writeto(result_table, output_filepath)
                 print(f"Saved matched table: {output_filepath}")
 print("Matching complete!")
 
+ 

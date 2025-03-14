@@ -74,7 +74,7 @@ for target_file in files:
         ra_column = table['RA'].data
         dec_column = table['DEC'].data
 
-        new_table = Table(data=[ra_column, dec_column, N, nxs, mean_magnitude], names=('RA', 'DEC', 'N', 'NXS', 'mean_magnitude'))
+        new_table = Table(data=[ra_column, dec_column, N, nxs, mean_magnitude], names=('RA', 'DEC', 'N', 'excess_variance', 'mean_magnitude'))
         new_votable = from_table(new_table)
 
         # Generate the output file name by removing '_all_xcalibrated_clean.vot' from the original name

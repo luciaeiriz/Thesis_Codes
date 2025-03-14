@@ -3,11 +3,11 @@ import os
 from astropy.table import Table
 from astropy.io.votable import parse, from_table, writeto
 
-# Stetson K Index 
+# Von Neumann ratio index
 
 # Paths
 data_folder = 'Filtered_Data'
-output_folder = 'Stetson_K_Indices'
+output_folder = 'Von_neumann_Indices'
 
 # List all files 
 files = os.listdir(data_folder)
@@ -42,46 +42,48 @@ for target_file in files:
         # Number of nights for each star, ignoring those that are empty
         N = np.sum(~np.isnan(mag_matrix), axis=1)
 
-        # Stetson K Index calculation
-        sk_index = np.full(mag_matrix.shape[0], np.nan)  # Initialize Stetson K values
-        mean_magnitude = np.full(mag_matrix.shape[0], np.nan)  # Initialize mean magnitudes
-        
+        # Initialize an array to store the index for each object
+        vn_index = np.zeros(mag_matrix.shape[0])
+        mean_magnitude = np.full(mag_matrix.shape[0], np.nan)
+        weighted_mag = np.zeros(mag_matrix.shape[0])
         for i in range(mag_matrix.shape[0]):
-            # Extract valid magnitudes and errors (remove NaN)
+        # Extract valid magnitudes (remove NaN)
             valid_mask = ~np.isnan(mag_matrix[i]) & ~np.isnan(mager_matrix[i])
             valid_mags = mag_matrix[i, valid_mask]
             valid_mager = mager_matrix[i, valid_mask]
 
-            if len(valid_mags) > 1: 
-                
-                weights = 1 / valid_mager**2  # Weights
-                weighted_mean = np.sum(valid_mags * weights) / np.sum(weights)
+            if len(valid_mags) > 1:  # Perform calculation only if there are at least 2 values
+                # Calculate mean magnitude
+                mean_magnitude[i] = np.nanmean(valid_mags)
+                n = len(valid_mags)
 
-                delta_i = np.sqrt(len(valid_mags) / (len(valid_mags) - 1)) * (valid_mags - weighted_mean) / valid_mager
+                numerator_weighted = np.sum(valid_mags / valid_mager ** 2)
+                denominator_weighted = np.sum(1 / (valid_mager ** 2))
+                weighted_mag[i] = numerator_weighted / denominator_weighted
 
-                numerator = np.sum(np.abs(delta_i)) / len(valid_mags)
-                denominator = np.sqrt(np.sum(delta_i**2) / len(valid_mags))
-                sk_index[i] = numerator / denominator
+                #(m_{i+1} - m_i)^2 / (N-1)
+                numerator = np.sum((valid_mags[1:] - valid_mags[:-1])**2) / (n-1)
+                #sum of (m_i - m_bar)^2 / (N-1)
+                denominator = np.sum((valid_mags - weighted_mag[i]) ** 2) / (n-1)
 
-                # Store mean magnitude
-                mean_magnitude[i] = weighted_mean
+                # Calculate l1 index, checking if the denominator is non-zero
+                vn_index[i] = 1 / (numerator / denominator if denominator != 0 else np.nan)
             else:
-                # Not enough data points
-                sk_index[i] = np.nan
+                # If there aren't enough valid data points, store NaN
                 mean_magnitude[i] = np.nan
+                vn_index[i] = np.nan
 
         # Saving data in new table
         ra_column = table['RA'].data
         dec_column = table['DEC'].data
 
-        new_table = Table(data=[ra_column, dec_column, N, sk_index, mean_magnitude], names=('RA', 'DEC', 'N', 'Stetson_K', 'mean_magnitude'))
+        new_table = Table(data=[ra_column, dec_column, N, vn_index, mean_magnitude], names=('RA', 'DEC', 'N', 'Von_neumann', 'mean_magnitude'))
         new_votable = from_table(new_table)
 
         # Generate the output file name by removing '_filtered.vot' from the original name
         base_name = target_file.replace('.vot', '')
-        output_file_path = os.path.join(output_folder, f"{base_name}_sK.vot")
+        output_file_path = os.path.join(output_folder, f"{base_name}_vonneumann.vot")
 
         # Save the new VOTable to the specified folder
         writeto(new_votable, output_file_path)
-
         print(f"New VOTable saved as {output_file_path}")

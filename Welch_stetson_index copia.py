@@ -3,9 +3,9 @@ from astropy.table import Table
 import numpy as np
 import os
 
-# Steson J index
+# Welch-Stetson index
 
-def calculate_stetson_J(b, v, sigma_b, sigma_v):
+def calculate_welch_stetson(b, v, sigma_b, sigma_v):
     mask = ~np.isnan(b) & ~np.isnan(v) & ~np.isnan(sigma_b) & ~np.isnan(sigma_v) & (sigma_b > 0) & (sigma_v > 0)
     b, v, sigma_b, sigma_v = b[mask], v[mask], sigma_b[mask], sigma_v[mask]
     
@@ -15,24 +15,18 @@ def calculate_stetson_J(b, v, sigma_b, sigma_v):
 
     b_bar = np.sum(b / sigma_b**2) / np.sum(1 / sigma_b**2)
     v_bar = np.sum(v / sigma_v**2) / np.sum(1 / sigma_v**2)
-
-    n_b = np.sum(~np.isnan(b))
-    n_v = np.sum(~np.isnan(v))
-
-    P_i = (np.sqrt(n_b / (n_b - 1)) * (b - b_bar) / sigma_b) * (np.sqrt(n_v / (n_v - 1)) * (v - v_bar) / sigma_v)
-    weight = 1 / (1/sigma_v + 1/sigma_b)
-
-    numerator = np.sum(weight * np.sign(P_i) * np.sqrt(np.abs(P_i)))
-    denominator = np.sum(weight)
     
-    sJ_index = numerator / denominator
+    numerator = np.sum(((b - b_bar) / sigma_b) * ((v - v_bar) / sigma_v))
+    denominator = np.sqrt(n * (n - 1))
+    
+    ws_index = numerator / denominator
     mean_mag = (b_bar + v_bar) / 2
 
-    return sJ_index, n, mean_mag
+    return ws_index, n, mean_mag
 
 # Input and output folder setup
 input_folder = 'Paired_data_by_filters'
-output_folder = 'Stetson_J_Indices'
+output_folder = 'Welch_Stetson_Indices'
 os.makedirs(output_folder, exist_ok=True)
 
 # Process each VOTable in the input folder
@@ -71,25 +65,25 @@ for filename in os.listdir(input_folder):
             v_errors = np.ma.filled(np.ma.array(v_errors), fill_value=np.nan)   
             
             # Calculate Welch-Stetson Variability Index
-            index, n, mean_mag = calculate_stetson_J(b_mags, v_mags, b_errors, v_errors)
+            index, n, mean_mag = calculate_welch_stetson(b_mags, v_mags, b_errors, v_errors)
             variability_indices.append(index)
             n_observations.append(n)
             mean_magnitudes.append(mean_mag)
 
         # Create a new table with the results
         new_table = Table(data=[ra_list, dec_list, n_observations, variability_indices, mean_magnitudes],
-                          names=('RA', 'DEC', 'N', 'Stetson_J', 'mean_magnitude'))
+                          names=('RA', 'DEC', 'N', 'Welch_Stetson', 'mean_magnitude'))
 
         # Create a new VOTable from the table
         new_votable = from_table(new_table)
 
         # Generate the output file name
         base_name_without_ext = os.path.splitext(filename)[0]
-        output_file_path = os.path.join(output_folder, f"{base_name_without_ext}_sJ.vot")
+        output_file_path = os.path.join(output_folder, f"{base_name_without_ext}_ws.vot")
 
         # Save the new VOTable
         try:
             writeto(new_votable, output_file_path)
             print(f"New VOTable saved as {output_file_path}")
         except Exception as e:
-            print(f"Error writing VOTable {filename}: {e}")
+            print(f"Error writing VOTable {filename}: {e}") 

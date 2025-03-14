@@ -1,0 +1,78 @@
+#Data:
+- Each data is in the form 'CepOB3_*x*_NPh_aperphot_ststar_v4_part*0y*_all_xcalibrated_clean.vot':
+    where *x* can be any of the following: gSDSS, rSDSS, iSDSS, zSDSS, J0660, uJAVA, each corresponding to a different filter
+    *y* can be any number from 1-4, the area of sky being observed is too big so it is divided into four parts, part 1 of one 
+    filter and part 1 of another filter corresponds to the same region in the sky
+- Theres also data in the form of 'CepOB3_*x*_NPh_aperphot_ststar_v4_part*0y*_NPh_ref0_ststar_v4_sa04_NPh_v4_indices.vot'
+    This containes the RA and DEC for the star alongside the corresponding number of observations and the variability index for
+    the SA04 index
+- For those named 'CepOB3_part1_NPh_aperphot_ref0_v1_catalogids_stetson_Mindex_ststar_5px.vot' etc
+    For the Stetson and M-indices, because they combine indices, there is one file per part (based on the part numbering from gSDSS)
+
+#plot_lightcurve_by_coords.py:
+- Plots a lightcurve for a specified star
+    The code requires 4 arguments to run: RA DEC offset1 offset2
+    RA and DEC can be copied from the 'xcalibrated_clean.vot' files
+    Offset 1 (can be changed)
+    This geneates a plot for the specified star (given by RA and DEC) and shows the variability for all filters
+
+#do_lightcurve_aperphot.py:
+- Extracts the light-curve data 
+
+#index.py
+scripts named '*_index.py' calculates index for * and is stored in a folder named *_Indices 
+
+#histogram.py
+Creates a histogram for a specific .vot table where it plots the density of an index
+
+#min_max_avg.py
+Calculates minimum maximum and average values for magnitude and magnitude errors, for one specific row on one specific file
+
+#magnitude_vs_index.py
+Plots mean magnitude vs specified index 
+
+#Folder 'Data_per_night'
+I created a script named 'data_per_night.py' which floors the JD values for each measurement and sees if the measuremenets where 
+taken on the same night, if so, it calculates the mean magnitude and mean magnitude error for that night. 
+
+#Folder 'Filtered_Data' 
+Has the same data as 'Data_per_night' but filters out rows which have too high of a magnitude to be reliable data (known from the 
+plots created using the magnitude_vs_index.py plot, we just check where values are saturated). Every index that uses errors to 
+calculate variability uses this data.
+
+#index_limit.py
+Given a VOTable it will extract a new table with only the values above a certain index_limit
+
+#'Gaia_nonvariables_tomatch.vot' and folder 'Gaia_nonvariable_Indices'
+VOTable with nonvariable objects from Gaia survey and folder are the matched stellar obejcts for every given index
+
+#'simbad_variables.vot' and folder 'Simbad_variable_objects'
+- All variable objects from the above list 
+- Folder with the matched obejcts for every corresponding index 
+
+#'index_limit.py' and folder 'variable_objects' 
+Extracts from a given VOTable all the rows that have a index value above a given number and saves it as a new VOTable.
+The folder hold the correspoding data extracted
+
+#filtering_by_mean_mag.py
+Deleats objects from the data folder if their mean magnitude is below a certain threshold, done to get rid of saturated 
+CepOB3_part1_NPh_aperphot_ref0_v1_catalogids_stetson_Mindex_ststar_5px
+It also includes a script which delets objects under a given Gaia magnitude.
+And another script which delets objects whith a number observations under a given threshold
+
+#match_tool.py
+Matches lists (same concept as match tool in TOPCAT). Used to match variables and nonvariables for each index+filter
+
+#ks_test.py
+Perfomrs the Kolmogorov-Smirnov test between the non-variables and variables of a given index for a given filter. 
+
+#Script 'index_limit' and folder 'Variable_objects'
+Deleates the objects which are under the variability threshold. 
+Output is stored in the folder. 
+
+#Script 'matching_varibales'
+Stores objects if they are present in three or more filters for each given index
+
+#Script 'object_count'
+Counts number of object types in a given file
+(used for VOTables I made matching the Simbad table with the variable objects extracte using the limit threshold)

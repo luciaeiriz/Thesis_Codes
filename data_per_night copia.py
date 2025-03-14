@@ -40,8 +40,14 @@ def process_vot_file(file_path):
                 nights[night]['mags'].append(mag)
                 nights[night]['magers'].append(mager)
         
-        return {night: {'avg_mag': np.mean(data['mags']), 'avg_mager': np.mean(data['magers'])}
-                for night, data in nights.items()}
+        # Calculate weighted mean magnitude and weighted mean error for each night
+        return {
+            night: {
+                'avg_mag': np.average(data['mags'], weights=1/np.array(data['magers'])**2),
+                'avg_mager': np.sqrt(1 / np.sum(1/np.array(data['magers'])**2))
+            }
+            for night, data in nights.items()
+        }
 
     processed_data = remaining_df.apply(process_star, axis=1)
 
@@ -63,7 +69,9 @@ def process_vot_file(file_path):
 
     return result_df
 
-# Folder paths
+# The rest of the code remains the same
+
+
 folder_path = 'Clean_Data'
 output_path = 'Data_per_night'
 
@@ -85,9 +93,11 @@ for file_name in os.listdir(folder_path):
         votable = from_table(astropy_table)
 
         # Create output file name
-        output_file_name = file_name.replace('.vot', '_processed.vot')
+        output_file_name = file_name.replace('.vot', '.vot')
         output_file_path = os.path.join(output_path, output_file_name)
 
         # Save the result to a new VOTable file
         writeto(votable, output_file_path)
         print(f"Processing complete for {file_name}. Results saved to '{output_file_path}'")
+
+

@@ -2,7 +2,7 @@ from astropy.io.votable import parse
 from collections import Counter
 
 # Load the VOTable file
-votable = parse("Variable_objects/Stetson_K_Variables/simbad_match_sK.vot")  # Replace with your file path
+votable = parse("Variable_objects/SA04_Variables/simbad_match_sa04.vot")  # change when necessary
 
 # Access the first table in the VOTable
 table = votable.get_first_table().to_table()

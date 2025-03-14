@@ -79,8 +79,7 @@ for target_file in files:
         ra_column = table['RA'].data
         dec_column = table['DEC'].data
 
-        new_table = Table(data=[ra_column, dec_column, N, l1_index, mean_magnitude],
-                          names=('RA', 'DEC', 'N', 'l1_index', 'mean_magnitude'))
+        new_table = Table(data=[ra_column, dec_column, N, l1_index, mean_magnitude], names=('RA', 'DEC', 'N', 'lag_1', 'mean_magnitude'))
         new_votable = from_table(new_table)
 
         # Generate the output file name by removing '_filtered.vot' from the original name

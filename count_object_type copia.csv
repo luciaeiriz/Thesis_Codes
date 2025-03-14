@@ -1,0 +1,99 @@
+Object_type,Index,Count
+YSOs,Chi Squared,270
+MS stars,Chi Squared,0
+Evolved stars,Chi Squared,40
+Interacting binaries,Chi Squared,99
+Variability,Chi Squared,0
+General spectral properties,Chi Squared,0
+Star,Chi Squared,64
+YSOs,IQR,106
+MS stars,IQR,0
+Evolved stars,IQR,18
+Interacting binaries,IQR,17
+Variability,IQR,0
+General spectral properties,IQR,0
+Star,IQR,10
+YSOs,MAD,139
+MS stars,MAD,0
+Evolved stars,MAD,22
+Interacting binaries,MAD,28
+Variability,MAD,0
+General spectral properties,MAD,0
+Star,MAD,17
+YSOs,Lag 1,96
+MS stars,Lag 1,0
+Evolved stars,Lag 1,50
+Interacting binaries,Lag 1,18
+Variability,Lag 1,0
+General spectral properties,Lag 1,0
+Star,Lag 1,13
+YSOs,Weighted SD,61
+MS stars,Weighted SD,0
+Evolved stars,Weighted SD,12
+Interacting binaries,Weighted SD,6
+Variability,Weighted SD,0
+General spectral properties,Weighted SD,0
+Star,Weighted SD,14
+YSOs,NXS,29
+MS stars,NXS,0
+Evolved stars,NXS,9
+Interacting binaries,NXS,2
+Variability,NXS,0
+General spectral properties,NXS,0
+Star,NXS,3
+YSOs,PPV,53
+MS stars,PPV,0
+Evolved stars,PPV,11
+Interacting binaries,PPV,9
+Variability,PPV,0
+General spectral properties,PPV,0
+Star,PPV,20
+YSOs,RoMS,179
+MS stars,RoMS,0
+Evolved stars,RoMS,28
+Interacting binaries,RoMS,43
+Variability,RoMS,0
+General spectral properties,RoMS,0
+Star,RoMS,31
+YSOs,Von Neumann,145
+MS stars,Von Neumann,0
+Evolved stars,Von Neumann,52
+Interacting binaries,Von Neumann,30
+Variability,Von Neumann,0
+General spectral properties,Von Neumann,0
+Star,Von Neumann,23
+YSOs,Welch Stetson,538
+MS stars,Welch Stetson,1
+Evolved stars,Welch Stetson,54
+Interacting binaries,Welch Stetson,328
+Variability,Welch Stetson,0
+General spectral properties,Welch Stetson,1
+Star,Welch Stetson,103
+YSOs,Stetson J,474
+MS stars,Stetson J,1
+Evolved stars,Stetson J,54
+Interacting binaries,Stetson J,319
+Variability,Stetson J,0
+General spectral properties,Stetson J,1
+Star,Stetson J,83
+YSOs,Stetson K,76
+MS stars,Stetson K,0
+Evolved stars,Stetson K,4
+Interacting binaries,Stetson K,40
+Variability,Stetson K,0
+General spectral properties,Stetson K,0
+Star,Stetson K,67
+YSOs,Stetson,290
+MS stars,Stetson,0
+Evolved stars,Stetson,42
+Interacting binaries,Stetson,125
+Variability,Stetson,0
+General spectral properties,Stetson,0
+Star,Stetson,0
+YSOs,SA04,95
+MS stars,SA04,0
+Evolved stars,SA04,18
+Interacting binaries,SA04,13
+Variability,SA04,1
+General spectral properties,SA04,0
+Star,SA04,0
