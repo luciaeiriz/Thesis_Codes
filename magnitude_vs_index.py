@@ -11,7 +11,7 @@ output_folder = 'Figures'
 
 # Specify the files to process
 index_name = 'chisquared' #change
-filter = 'zSDSS'
+filter = 'uJAVA'
 file_1 = 'nonvariables_'+filter+'_'+index_name+'.vot'
 file_2 = 'variables_'+filter+'_'+index_name+'.vot'
 
@@ -51,9 +51,9 @@ if 'chi_squared' in table_1.colnames and 'mean_magnitude' in table_1.colnames an
     plt.hist(mean_magnitude_1, bins=70,density=True ,color='red', alpha=0.6, label="Non-variable objects")
     plt.hist(mean_magnitude_2, bins=70,density=True ,color='blue', alpha=0.5, label="Variable objects")
 
-    plt.title('Mean Magnitude - '+ filter) #change 
-    plt.xlabel('Mean Magnitude')
-    plt.ylabel('Count')
+    plt.title(filter)
+    plt.xlabel('Mean Magnitude', fontsize=14)
+    plt.ylabel('Count', fontsize=14)
     plt.legend()
     plt.grid(True)
     plt.tight_layout()

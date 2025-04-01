@@ -12,9 +12,9 @@ output_folder = 'IQR_Indices'
 # List all files 
 files = os.listdir(data_folder)
 
-# Iterate over all filters 
+# Iterate over each file 
 for target_file in files:
-    if target_file.endswith('.vot'):
+    if target_file.endswith('.vot'):  # Check for specific file 
         file_path = os.path.join(data_folder, target_file)
 
         votable = parse(file_path)
@@ -68,7 +68,7 @@ for target_file in files:
         new_table = Table(data=[ra_column, dec_column, N, iqr, mean_magnitude], names=('RA', 'DEC', 'N', 'interquartile_range', 'mean_magnitude'))
         new_votable = from_table(new_table)
 
-        # Generate the output file name 
+        # Generate the output file name by removing '_all_xcalibrated_clean.vot' from the original name
         base_name = target_file.replace('.vot', '')
         output_file_path = os.path.join(output_folder, f"{base_name}_iqr.vot")
 

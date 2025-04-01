@@ -1,0 +1,99 @@
+Object_type,Index,Count
+YSO,Chi Squared,433
+MS star,Chi Squared,0
+Evolved stars,Chi Squared,44
+Interacting binaries,Chi Squared,207
+Substellar objects,Chi Squared,0
+Environment properties,Chi Squared,0
+Star,Chi Squared,96
+YSO,IQR,158
+MS star,IQR,0
+Evolved stars,IQR,23
+Interacting binaries,IQR,38
+Substellar objects,IQR,0
+Environment properties,IQR,0
+Star,IQR,24
+YSO,MAD,174
+MS star,MAD,0
+Evolved stars,MAD,25
+Interacting binaries,MAD,42
+Substellar objects,MAD,0
+Environment properties,MAD,0
+Star,MAD,29
+YSO,Lag 1,120
+MS star,Lag 1,0
+Evolved stars,Lag 1,52
+Interacting binaries,Lag 1,26
+Substellar objects,Lag 1,0
+Environment properties,Lag 1,0
+Star,Lag 1,20
+YSO,Weighted SD,216
+MS star,Weighted SD,0
+Evolved stars,Weighted SD,27
+Interacting binaries,Weighted SD,65
+Substellar objects,Weighted SD,0
+Environment properties,Weighted SD,0
+Star,Weighted SD,52
+YSO,NXS,143
+MS star,NXS,0
+Evolved stars,NXS,19
+Interacting binaries,NXS,33
+Substellar objects,NXS,0
+Environment properties,NXS,0
+Star,NXS,39
+YSO,PPV,162
+MS star,PPV,0
+Evolved stars,PPV,17
+Interacting binaries,PPV,35
+Substellar objects,PPV,0
+Environment properties,PPV,0
+Star,PPV,51
+YSO,RoMS,370
+MS star,RoMS,0
+Evolved stars,RoMS,43
+Interacting binaries,RoMS,154
+Substellar objects,RoMS,0
+Environment properties,RoMS,0
+Star,RoMS,72
+YSO,Von Neumann,152
+MS star,Von Neumann,0
+Evolved stars,Von Neumann,51
+Interacting binaries,Von Neumann,33
+Substellar objects,Von Neumann,0
+Environment properties,Von Neumann,0
+Star,Von Neumann,26
+YSO,Welch Stetson,649
+MS star,Welch Stetson,1
+Evolved stars,Welch Stetson,63
+Interacting binaries,Welch Stetson,435
+Substellar objects,Welch Stetson,0
+Environment properties,Welch Stetson,0
+Star,Welch Stetson,144
+YSO,Stetson J,626
+MS star,Stetson J,1
+Evolved stars,Stetson J,59
+Interacting binaries,Stetson J,447
+Substellar objects,Stetson J,0
+Environment properties,Stetson J,0
+Star,Stetson J,115
+YSO,Stetson K,26
+MS star,Stetson K,0
+Evolved stars,Stetson K,3
+Interacting binaries,Stetson K,33
+Substellar objects,Stetson K,0
+Environment properties,Stetson K,0
+Star,Stetson K,52
+YSO,Stetson S,606
+MS star,Stetson S,5
+Evolved stars,Stetson S,65
+Interacting binaries,Stetson S,474
+Substellar objects,Stetson S,1
+Environment properties,Stetson S,4
+Star,Stetson S,266
+YSO,SA04,283
+MS star,SA04,2
+Evolved stars,SA04,42
+Interacting binaries,SA04,112
+Substellar objects,SA04,1
+Environment properties,SA04,4
+Star,SA04,192
