@@ -5,23 +5,20 @@ from astropy.io.votable import parse_single_table, from_table, writeto
 from astropy.table import Table
 
 def process_vot_file(file_path):
-    # Read the .vot file
+
     table = parse_single_table(file_path)
-    
-    # Convert to astropy Table if it's not already
+
     if not isinstance(table, Table):
         table = table.to_table()
-    
-    # Convert to pandas DataFrame
+
     df = table.to_pandas()
 
     # Keep the first 6 columns intact
     result_df = df.iloc[:, :6].copy()
-
     # Process the remaining columns
     remaining_df = df.iloc[:, 6:]
 
-    # Identify columns with 'JD', 'mag', and 'mager' in their names
+    # Identify columns with 'JD', 'mag', and 'mager' in their header
     jd_columns = [col for col in remaining_df.columns if 'JD' in col]
     mag_columns = [col for col in remaining_df.columns if 'mag' in col.lower() and 'mager' not in col.lower()]
     mager_columns = [col for col in remaining_df.columns if 'mager' in col.lower()]
@@ -54,7 +51,7 @@ def process_vot_file(file_path):
     # Get all unique nights across all stars
     all_nights = sorted(set.union(*[set(star.keys()) for star in processed_data]))
 
-    # Prepare data for new columns
+    # Data for new columns
     new_data = {}
     for i, night in enumerate(all_nights, start=2):
         new_data[f'night_{i}'] = [night] * len(processed_data)
@@ -64,12 +61,10 @@ def process_vot_file(file_path):
     # Create a new DataFrame with the processed data
     new_df = pd.DataFrame(new_data)
 
-    # Concatenate the original and new DataFrames
+    # Join the original and new data
     result_df = pd.concat([result_df, new_df], axis=1)
 
     return result_df
-
-# The rest of the code remains the same
 
 
 folder_path = 'Clean_Data'
@@ -84,15 +79,11 @@ for file_name in os.listdir(folder_path):
     if file_name.endswith('.vot'):  # Process only .vot files
         file_path = os.path.join(folder_path, file_name)
         
-        # Process the file
         result = process_vot_file(file_path)
-
         astropy_table = Table.from_pandas(result)
-
-        # Create a VOTable object from the astropy Table
         votable = from_table(astropy_table)
 
-        # Create output file name
+        # Output file name
         output_file_name = file_name.replace('.vot', '.vot')
         output_file_path = os.path.join(output_path, output_file_name)
 

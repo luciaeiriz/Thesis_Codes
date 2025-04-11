@@ -3,11 +3,10 @@ from astropy.io.votable import parse
 import matplotlib.ticker as ticker
 
 
-# Function to extract the fourth column from a VOTable file
 def extract_fourth_column(file_path):
     votable = parse(file_path)
     table = votable.get_first_table().to_table()
-    return table.columns[3]  # Fourth column (index 3)
+    return table.columns[3]  # Index column
 
 x = "l1"
 

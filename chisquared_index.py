@@ -24,7 +24,7 @@ for target_file in files:
         magnitude = []
         magnitude_err = []
 
-        # Identify columns that contain '_mag_' and '_mager_' in header
+        # Identify columns that contain '_mag_' and '_mager_' in the header
         for col in table.colnames:
             if 'mag_' in col:
                 magnitude.append(table[col].data)
@@ -33,7 +33,7 @@ for target_file in files:
 
         # Convert lists to numpy arrays, replacing empty values with NaN
         mag_matrix = np.array(magnitude, dtype='float').T  # Transpose for objects in rows
-        mager_matrix = np.array(magnitude_err, dtype='float').T  # Transpose for objects in rows
+        mager_matrix = np.array(magnitude_err, dtype='float').T
 
         # Replace masked/empty values with NaN
         mag_matrix = np.where(np.ma.is_masked(mag_matrix), np.nan, mag_matrix)
@@ -77,11 +77,11 @@ for target_file in files:
         new_table = Table(data=[ra_column, dec_column, N, chi_squared, mean_magnitude], names=('RA', 'DEC', 'N', 'chi_squared', 'mean_magnitude'))
         new_votable = from_table(new_table)
 
-        # Generate the output file name by removing '_all_xcalibrated_clean.vot' from the original name
+        # Generate the output file name
         base_name = target_file.replace('.vot', '')
         output_file_path = os.path.join(output_folder, f"{base_name}_chisquared.vot")
 
-        # Save the new VOTable to the specified folder
+        # Save the new VOTable
         writeto(new_votable, output_file_path)
 
         print(f"New VOTable saved as {output_file_path}")

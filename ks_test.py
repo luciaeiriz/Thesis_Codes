@@ -1,4 +1,3 @@
-#KS tets performed on all files at once and produces a csv file with output 
 import os
 import numpy as np
 from astropy.io.votable import parse
@@ -11,24 +10,25 @@ def read_variability_indices(votable_path):
     data = table.array
     return data[data.dtype.names[3]]
 
+# K-S test 
 def perform_ks_test(variable_file, nonvariable_file):
     variable_indices = read_variability_indices(variable_file)
     non_variable_indices = read_variability_indices(nonvariable_file)
     statistic, p_value = ks_2samp(variable_indices, non_variable_indices)
     return statistic, p_value
 
+# Paths for the two samples idstributions 
 variable_folder = 'Simbad_variable_objects'
 nonvariable_folder = 'Gaia_nonvariable_objects'
 
 results = []
 
-
 for filename in os.listdir(variable_folder):
-    if filename.startswith('variables_') and filename.endswith('.vot'):
+    if filename.startswith('variables_') and filename.endswith('.vot'): # Variables
         identifier = filename.split('variables_')[1].split('.vot')[0]
         
         variable_file = os.path.join(variable_folder, filename)
-        nonvariable_file = os.path.join(nonvariable_folder, f'nonvariables_{identifier}.vot')
+        nonvariable_file = os.path.join(nonvariable_folder, f'nonvariables_{identifier}.vot')  # Non-variables
         
         if os.path.exists(nonvariable_file):
             try:

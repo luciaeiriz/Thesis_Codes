@@ -4,13 +4,11 @@ from collections import defaultdict
 
 # Load the VOTable file
 votable = parse("Variable_objects/Welch_Stetson_Variables/matched_variables_ws.vot")  # Change when necessary
-
-# Access the first table in the VOTable
 table = votable.get_first_table().to_table()
 
-# Extract relevant columns
-stellar_types = table["OTYPE_S"]  # Stellar types (OTYPE_S)
-stetson_values = table["Welch_Stetson"]  # Stetson values
+# Extract columns
+stellar_types = table["OTYPE_S"]  # Stellar types
+stetson_values = table["Welch_Stetson"]  # Index values
 
 # Dictionary to store sum of Stetson values and count per OTYPE_S
 stellar_stats = defaultdict(lambda: {"sum": 0, "count": 0})

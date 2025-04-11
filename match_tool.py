@@ -7,11 +7,10 @@ from astropy.table import Table
 #Max error of 1.2 arcsec
 max_error = 1.2 * u.arcsec
 
-#Load VOTable. Change depnding on what is being processed!
 gaia_votable = parse('Simbad_variables.vot') #change when necessary
 gaia_table = gaia_votable.get_first_table().to_table()
 
-#Extract ra and dec from table being processed.
+#Extract ra and dec from table being processed. 
 gaia_coords = SkyCoord(ra=gaia_table['RA_d'], dec=gaia_table['DEC_d'], unit=(u.degree, u.degree), frame='icrs') #change when necessary
 
 #Output folder
